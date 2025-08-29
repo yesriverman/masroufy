@@ -1,0 +1,272 @@
+
+{% extends 'base.html' %}
+{% block title %}📂 لوحة الفئة{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>📂 لوحة الفئة</h2>
+
+<form method="get" class="row g-3 mb-4">
+  {% comment %} <div class="col-md-4">
+    <label for="group">اختر الفئة:</label>
+    <select name="group" id="group" class="form-control">
+      <option value="">-- اختر --</option>
+      {% for cat in groups %}
+        <option value="{{ cat.id }}" {% if cat.id == selected_id %}selected{% endif %}>{{ cat.name }}</option>
+      {% endfor %}
+    </select>
+  </div> {% endcomment %}
+
+  <div class="col-md-4">
+    <label for="start_date">من تاريخ:</label>
+    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ start_date }}">
+  </div>
+
+  <div class="col-md-4">
+    <label for="end_date">إلى تاريخ:</label>
+    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ end_date }}">
+  </div>
+
+  <div class="col-md-2 d-flex align-items-end">
+    <button type="submit" class="btn btn-primary w-100">🔍 بحث</button>
+  </div>
+</form>
+
+
+
+  <!-- group Selector -->
+  <form method="get" class="mb-4">
+    <label for="group">اختر الفئة:</label>
+    <select name="group" id="group" class="form-control" onchange="this.form.submit();">
+      <option value="">-- اختر --</option>
+      {% for cat in groups %}
+        <option value="{{ cat.id }}" {% if cat.id == selected_id %}selected{% endif %}>{{ cat.name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+
+  {% if selected_group %}
+    <div class="mb-4">
+      <h4>{{ selected_group.name }}</h4>
+      <p>📌 المتوقع: <strong>{{ total_expected }} MAD</strong></p>
+      <p>📌 المصروفات الفعلية: <strong>{{ total_actual }} MAD</strong></p>
+    </div>
+
+    <!-- Sublabel Breakdown -->
+    <div class="accordion" id="labelAccordion">
+      {% for item in sublabel_data %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false"
+                    aria-controls="collapse{{ forloop.counter }}">
+              {{ item.label.name }} — المتوقع: {{ item.expected }} MAD / الفعلي: {{ item.actual }} MAD
+            </button>
+          </h2>
+          <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse"
+               aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#labelAccordion">
+            <div class="accordion-body">
+              {% if item.expenses %}
+                <ul class="list-group">
+                  {% for expense in item.expenses %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      {{ expense.amount }} MAD
+                      <span class="badge bg-secondary">{{ expense.date|date:"Y-m-d" }}</span>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p class="text-muted">لا توجد مصروفات لهذه التسمية.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+
+
+{% comment %} 
+{% extends 'base.html' %}
+{% block title %}📂 لوحة الفئة{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>📂 لوحة الفئة</h2>
+
+  <!-- group Selector -->
+  <form method="get" class="mb-4">
+    <label for="group">اختر الفئة:</label>
+    <select name="group" id="group" class="form-control" onchange="this.form.submit();">
+      <option value="">-- اختر --</option>
+      {% for cat in groups %}
+        <option value="{{ cat.id }}" {% if cat.id == selected_id %}selected{% endif %}>{{ cat.name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+
+  {% if selected_group %}
+    <div class="mb-4">
+      <h4>{{ selected_group.name }}</h4>
+      <p>📌 المتوقع: <strong>{{ total_expected }} MAD</strong></p>
+      <p>📌 المصروفات الفعلية: <strong>{{ total_actual }} MAD</strong></p>
+    </div>
+
+    <!-- Sublabel Breakdown -->
+    <div class="accordion" id="labelAccordion">
+      {% for item in sublabel_data %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false"
+                    aria-controls="collapse{{ forloop.counter }}">
+              {{ item.label.name }} — المتوقع: {{ item.expected }} MAD / الفعلي: {{ item.actual }} MAD
+            </button>
+          </h2>
+          <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse"
+               aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#labelAccordion">
+            <div class="accordion-body">
+              {% if item.expenses %}
+                <ul class="list-group">
+                  {% for expense in item.expenses %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      {{ expense.amount }} MAD
+                      <span class="badge bg-secondary">{{ expense.date|date:"Y-m-d" }}</span>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p class="text-muted">لا توجد مصروفات لهذه التسمية.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %} {% endcomment %}
+
+
+{% comment %} {% extends 'base.html' %}
+{% block title %}📂 لوحة الفئة{% endblock %}
+{% block content %}
+
+
+
+    <h1>لوحة التحكم الشهرية</h1>
+
+    <!-- group Selector -->
+    <form method="get" class="group-select">
+        <label for="group">اختر الفئة:</label>
+        <select name="group" id="group" onchange="this.form.submit()">
+            <option value="">عرض جميع الفئات</option>
+            {% for cat in groups %}
+                <option value="{{ cat.id }}" {% if selected_id == cat.id %}selected{% endif %}>
+                    {{ cat.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <!-- Dashboard Blocks -->
+    {% for group in group_data %}
+        <div class="group-block">
+            <h2>{{ group.group }}</h2>
+
+            {% for sub in group.subgroups %}
+                <div class="subgroup">
+                    <div class="label-name">{{ sub.label }}</div>
+                    <div class="amounts">
+                        متوقع: {{ sub.expected }} درهم<br>
+                        فعلي: {{ sub.actual }} درهم
+                    </div>
+                    <div class="progress-bar">
+                        {% if sub.expected > 0 %}
+                            {% with percent=sub.actual|floatformat:2|divisibleby:sub.expected|floatformat:0 %}
+                                <div class="progress-fill" style="width: {{ percent }}%;"></div>
+                            {% endwith %}
+                        {% else %}
+                            <div class="progress-fill" style="width: 0%;"></div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="totals">
+                الإجمالي المتوقع: {{ group.total_expected }} درهم<br>
+                الإجمالي الفعلي: {{ group.total_actual }} درهم
+            </div>
+        </div>
+    {% empty %}
+        <p>لا توجد بيانات لعرضها.</p>
+    {% endfor %}
+
+{% endblock %} {% endcomment %}
+
+
+
+
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem; }
+        .group-select { margin-bottom: 2rem; }
+        .group-block { border: 1px solid #ccc; padding: 1rem; margin-bottom: 2rem; border-radius: 6px; }
+        .subgroup { margin-left: 1rem; padding: 0.5rem 0; }
+        .totals { font-weight: bold; margin-top: 1rem; }
+        .progress-bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+        .progress-fill { height: 100%; background: #4caf50; }
+    </style>
+</head>
+<body>
+
+    <!-- group Selector -->
+    <form method="get" class="group-select">
+        <label for="group">اختر الفئة:</label>
+        <select name="group" id="group" onchange="this.form.submit()">
+            <option value="">عرض الكل</option>
+            {% for cat in groups %}
+                <option value="{{ cat.id }}" {% if selected_id == cat.id %}selected{% endif %}>
+                    {{ cat.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <!-- Dashboard Blocks -->
+    {% for group in group_data %}
+        <div class="group-block">
+            <h2>{{ group.group }}</h2>
+
+            {% for sub in group.subgroups %}
+                <div class="subgroup">
+                    <strong>{{ sub.label }}</strong><br>
+                    متوقع: {{ sub.expected }} درهم<br>
+                    فعلي: {{ sub.actual }} درهم
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ sub.actual|floatformat:2|divisibleby:sub.expected|default_if_none:"0" }}%;"></div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="totals">
+                الإجمالي المتوقع: {{ group.total_expected }} درهم<br>
+                الإجمالي الفعلي: {{ group.total_actual }} درهم
+            </div>
+        </div>
+    {% empty %}
+        <p>لا توجد بيانات لعرضها.</p>
+    {% endfor %}
+
+</body>
+</html> {% endcomment %}
+
+

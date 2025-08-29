@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}📊 سجل الدخل{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header text-white " >
+      <div class="row align-items-center">
+        <div class="col-md-9">
+          <h5 class="mb-0">💵 سجل المداخيل</h5>
+        </div>
+        <div class="col-md-3 text-end">
+          <a href="{% url 'income_add' %}?next={{ request.path }}" class="btn btn-outline-light">➕ إضافة دخل</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 📱 Mobile View: Accordion Cards -->
+<div class="d-block d-md-none">
+  <div class="accordion" id="incomeAccordion">
+    {% for income in incomes %}
+      <div class="accordion-item mb-2">
+        <h2 class="accordion-header" id="heading{{ income.id }}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ income.id }}" aria-expanded="false" aria-controls="collapse{{ income.id }}">
+            <strong>💰 المبلغ:</strong>
+            {{ income.amount|floatformat:0 }} د.م 
+            
+          </button>
+        </h2>
+        <div id="collapse{{ income.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ income.id }}" data-bs-parent="#incomeAccordion">
+          <div class="accordion-body">
+            <p> {{ income.date|date:"Y-m-d" }}</p>
+            <div class="d-flex gap-2 flex-wrap">
+              <a href="{% url 'income_edit' income.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-warning">✏️ تعديل</a>
+              <a href="{% url 'income_delete' income.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-danger">🗑️ حذف</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="alert alert-info text-center">🚫 لا توجد سجلات دخل حتى الآن.</div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- 💻 Desktop View: Table -->
+<div class="table-responsive d-none d-md-block">
+  <table class="table table-striped table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>📅 التاريخ</th>
+        <th>💰 المبلغ</th>
+        <th>الإجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for income in incomes %}
+        <tr>
+          <td>{{ income.amount|floatformat:0 }} د.م</td>
+          <td>{{ income.date|date:"Y-m-d" }}</td>
+          <td>
+            <a href="{% url 'income_edit' income.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-warning">✏️ تعديل</a>
+            <a href="{% url 'income_delete' income.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-danger ms-1">🗑️ حذف</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3" class="text-center text-muted py-4">🚫 لا توجد سجلات دخل حتى الآن.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% comment %} 
+    <div class="card-body">
+      <table class="table table-striped table-hover">
+        <thead class="table-light " >
+          <tr>
+            <th>📅 التاريخ</th>
+            <th>💰 المبلغ</th>
+            <th >الإجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for income in incomes %}
+          <tr>
+            <td>{{ income.date|date:"Y-m-d" }}</td>
+            <td>{{ income.amount|floatformat:0 }} د.م</td>
+            <td >
+              <a href="{% url 'income_edit' income.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-warning">تعديل</a>
+              <a href="{% url 'income_delete' income.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-danger ms-1">حذف</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3" class="text-center text-muted py-4">لا توجد سجلات دخل حتى الآن.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div> {% endcomment %}
+  </div>
+</div>
+
+{% endblock %}

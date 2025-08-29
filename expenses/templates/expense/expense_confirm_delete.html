@@ -1,0 +1,38 @@
+
+{% extends 'base.html' %}
+{% block title %}حذف المجموعة{% endblock %}
+{% block content %}
+
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white text-center">
+                    <h4 class="mb-0">⚠️ هل أنت متأكد؟</h4>
+                </div>
+                <div class="card-body">
+
+<div class="container mt-2 pt-2">
+  <div class="alert alert-warning text-center">
+     سيتم حذف المصروف
+    <div style="font-size: 1.25rem; font-weight: bold; text-decoration: underline;">{{ expense.amount }}
+    </div>
+      
+    <div style="font-size: 1.25rem; font-weight: bold; text-decoration: underline;">{{ expense.label }}
+    </div>
+  </div>
+
+  <form method="post" class="d-flex justify-content-center gap-2">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next_url }}">
+    <button type="submit" class="btn btn-danger">🗑️ نعم، احذف</button>
+
+  </form>
+      <a href="{{ next_url }}" class="btn btn-secondary">❌ إلغاء</a>
+</div>
+
+
+
+
+{% endblock %}

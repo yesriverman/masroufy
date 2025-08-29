@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}📈 المصاريف الشهرية المتغيرة{% endblock %}
+{% block content %}
+
+
+<form method="post">
+  {% csrf_token %}
+  {{ add_form.as_p }}
+  <input type="hidden" name="next" value="{{ next }}">
+  <button type="submit" name="add_label" class="btn btn-success">➕ إضافة</button>
+</form>
+
+{% for label, form in label_forms %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="hidden" name="next" value="{{ next }}">
+  <button type="submit" class="btn btn-primary">💾 حفظ</button>
+  <button type="submit" name="delete_label" value="{{ label.id }}" class="btn btn-danger">🗑️ حذف</button>
+</form>
+{% endfor %}
+
+
+
+
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">📈 المصاريف الشهرية المتغيرة</h2>
+
+  <!-- Add Label Form -->
+  <div class="card shadow-sm mb-4 mx-auto" style="max-width: 600px;">
+    <div class="card-header text-white" style="background-color: var(--navy);">
+      ➕ إضافة بند متغير
+    </div>
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ add_form.as_p }}
+        <button type="submit" name="add_label" class="btn btn-success w-100">➕ إضافة</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Existing Labels -->
+  {% for label, form in label_forms %}
+  <div class="card shadow-sm mb-3 mx-auto" style="max-width: 600px;">
+    <div class="card-header bg-light fw-bold">{{ label.name }}</div>
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-primary">💾 حفظ</button>
+          <button type="submit" name="delete_label" value="{{ label.id }}" class="btn btn-outline-danger">🗑️ حذف</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% empty %}
+  <p class="text-muted text-center">لا توجد مصاريف متغيرة بعد. أضف أول بند للبدء.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

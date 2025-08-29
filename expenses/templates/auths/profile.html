@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}الملف الشخصي{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-center " >
+                    <h4 class="mb-0">👤 الملف الشخصي</h4>
+                </div>
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+
+    <div class="card-body">
+      <div class="row row-cols-1 row-cols-sm-2 g-3">
+  <!-- 🧾 Username -->
+  <div class="col">
+    <div class="card border-grey shadow-sm h-100">
+      <div class="card-body py-2 px-3">
+        <h6 class="card-title text-muted mb-1">اسم المستخدم</h6>
+        <p class="card-text mb-0 fw-bold">{{ user.username }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📧 Email -->
+  <div class="col">
+    <div class="card border-grey shadow-sm h-100">
+      <div class="card-body py-2 px-3">
+        <h6 class="card-title text-muted mb-1">البريد الإلكتروني</h6>
+        <p class="card-text mb-0 fw-bold">{{ user.email|default:"—" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💼 Profession -->
+  <div class="col">
+    <div class="card border-grey shadow-sm h-100">
+      <div class="card-body py-2 px-3">
+        <h6 class="card-title text-muted mb-1">المهنة</h6>
+        <p class="card-text mb-0 fw-bold">{{ user.profession|default:"—" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📱 Phone -->
+  <div class="col">
+    <div class="card border-grey shadow-sm h-100">
+      <div class="card-body py-2 px-3">
+        <h6 class="card-title text-muted mb-1">رقم الهاتف</h6>
+        <p class="card-text mb-0 fw-bold">{{ user.phone_number|default:"—" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏙️ City -->
+  <div class="col">
+    <div class="card border-grey shadow-sm h-100">
+      <div class="card-body py-2 px-3">
+        <h6 class="card-title text-muted mb-1">المدينة</h6>
+        <p class="card-text mb-0 fw-bold">{{ user.city|default:"—" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💍 Married -->
+  <div class="col">
+    <div class="card border-grey shadow-sm h-100">
+      <div class="card-body py-2 px-3">
+        <h6 class="card-title text-muted mb-1">متزوج؟</h6>
+        <p class="card-text mb-0 fw-bold">{{ user.has_wife|yesno:"نعم,لا,—" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 👶 Kids -->
+  <div class="col">
+    <div class="card border-grey shadow-sm h-100">
+      <div class="card-body py-2 px-3">
+        <h6 class="card-title text-muted mb-1">عدد الأطفال</h6>
+        <p class="card-text mb-0 fw-bold">{{ user.kids|default:"—" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📅 Join Date -->
+  <div class="col">
+    <div class="card border-grey shadow-sm h-100">
+      <div class="card-body py-2 px-3">
+        <h6 class="card-title text-muted mb-1">تاريخ الانضمام</h6>
+        <p class="card-text mb-0 fw-bold">{{ user.date_joined|date:"d / m / Y" }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <hr>
+      <div class="d-flex justify-content-between">
+        <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">تعديل الملف</a>
+        {# Uncomment when ready #}
+        {# <a href="{% url 'change_password' %}" class="btn btn-outline-warning">تغيير كلمة المرور</a> #}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% block title %}📊 التخطيط المالي{% endblock %}
+{% block content %}
+
+<div class="container mt-3">
+    <div class="card shadow-sm ">
+      <div class="card-header text-white text-center " >
+          <h3 class="text-center mb-2">📊 التخطيط المالي الشهري</h3>
+      </div>
+      <!-- 📊 Summary Cards (Responsive & Compact) -->
+      <div class="row g-2 mt-1">
+        <div class="col-12 col-md-4">
+          <div class="card text-bg-success h-100">
+            <div class="card-body text-center py-1 px-1">
+              <h6 class="mb-1">💰 الدخل المتوقع</h6>
+              <p class="fs-5 mb-0">{{ monthly_income }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card text-bg-danger h-100">
+            <div class="card-body text-center py-1 px-1">
+              <h6 class="mb-1">💸 المصروفات المتوقعة</h6>
+              <p class="fs-5 mb-0">{{ monthly_expense_total|floatformat:0 }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card {% if net_balance >= 0 %}text-bg-primary{% else %}text-bg-warning{% endif %} h-100">
+            <div class="card-body text-center py-1 px-2">
+              <h6 class="mb-1">📈 الرصيد الصافي</h6>
+              <p class="fs-5 mb-0">{{ net_balance|floatformat:0 }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+      <div class="dropdown mb-2 mt-2">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          ⚙️ إعدادات التخطيط
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{% url 'label_add' %}?next={{ request.path }}">➕ إضافة تسمية</a></li>
+          <li><a class="dropdown-item" href="{% url 'expected_monthly_income_view' %}?next={{ request.path }}">✏️ تعديل الدخل الشهري</a></li>
+          <li><a class="dropdown-item" href="{% url 'annual_expenses_view' %}?next={{ request.path }}">📅 تعديل النفقات السنوية</a></li>
+          <li><a class="dropdown-item" href="{% url 'monthly_fixed_expenses_view' %}?next={{ request.path }}">📌 تعديل المصاريف الثابتة</a></li>
+        </ul>
+      </div>
+
+
+    <div class="card shadow-sm mb-2">  
+      <div class="accordion-item mb-2">
+        <h2 class="accordion-header" id="headingAnnual">
+          <button class="accordion-button collapsed" type="button"
+                  data-bs-toggle="collapse" data-bs-target="#collapseAnnual"
+                  aria-expanded="false" aria-controls="collapseAnnual">
+            <div class="w-100">
+              <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <span>📅 النفقات السنوية</span>
+              </div>
+              <div class="d-flex justify-content-start flex-wrap mt-2 gap-2">
+                <span class="badge bg-light text-dark">
+                  الإجمالي السنوي: <span class="fw-bold">{{ annual_total }}</span>
+                </span>
+                <span class="badge bg-light text-dark">
+                  مقسم شهرياً: <span class="fw-bold">{{ annual_monthly_equiv|floatformat:0 }}</span>
+                </span>
+              </div>
+            </div>
+          </button>
+        </h2>
+      </div>
+       
+    
+      <div id="collapseAnnual" class="accordion-collapse collapse " aria-labelledby="headingAnnual" data-bs-parent="#groupAccordion">
+        <div class="accordion-body">
+          {% if annual_labels %}
+            <div class="accordion" id="annualLabelAccordion">
+              {% for label in annual_labels %}
+                <div class="accordion-item mb-2">
+                  <h2 class="accordion-header" id="annualLabelHeading{{ label.id }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#annualLabelCollapse{{ label.id }}" aria-expanded="false"
+                            aria-controls="annualLabelCollapse{{ label.id }}">
+                      🏷️ {{ label.name }}
+                    </button>
+                  </h2>
+                  <div id="annualLabelCollapse{{ label.id }}" class="accordion-collapse collapse"
+                      aria-labelledby="annualLabelHeading{{ label.id }}" data-bs-parent="#annualLabelAccordion">
+                    <div class="accordion-body">
+                      <!-- 💻 Desktop View: Table -->
+                      <div class="table-responsive d-none d-md-block">
+                        <table class="table table-bordered text-center align-middle">
+                          <thead class="table-warning">
+                            <tr>
+                              <th>💰 المبلغ السنوي</th>
+                              <th>الإجراءات</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>{{ label.expected_monthly }}</td>
+                              <td>
+                                <a href="{% url 'label_edit' label.id %}?next={{ request.path }}" class="btn btn-sm btn-warning">✏️</a>
+                                <a href="{% url 'label_delete' label.id %}?next={{ request.path }}" class="btn btn-sm btn-danger">🗑️</a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- 📱 Mobile View: Card -->
+                      <div class="d-block d-md-none">
+                        <div class="card border-warning mb-2">
+                          <div class="card-body">
+                            <p><strong>💰 المبلغ السنوي:</strong> {{ label.expected_monthly }}</p>
+                            <div class="d-flex gap-2 justify-content-end">
+                              <a href="{% url 'label_edit' label.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-warning">✏️ تعديل</a>
+                              <a href="{% url 'label_delete' label.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-danger">🗑️ حذف</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-muted">لا توجد تسميات سنوية</p>
+          {% endif %}
+          <!-- ➕ Add Button -->
+          <div class="d-flex justify-content-between mt-3">
+            <a href="{% url 'label_add' %}?group=annual&next={{ request.path }}" class="btn btn-sm btn-primary">➕ إضافة تسمية سنوية</a>
+            <a href="{% url 'annual_expenses_view' %}?next={{ request.path }}" class="btn btn-sm btn-outline-secondary">⚙️ تعديل النفقات السنوية</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 📂 Regular Groups -->
+    {% for group in groups %}
+      <div class="accordion-item mb-2">
+        <h2 class="accordion-header" id="heading{{ group.id }}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapse{{ group.id }}" aria-expanded="false" aria-controls="collapse{{ group.id }}">
+            🗂️ {{ group.name }}
+            <span class="badge bg-light text-dark ms-2">
+              المجموع: <span class="fw-bold fs-5">{{ group.total_expected|floatformat:0 }}</span>
+            </span>
+          </button>
+        </h2>
+        <div id="collapse{{ group.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ group.id }}" data-bs-parent="#groupAccordion">
+          <div class="accordion-body">
+
+            {% if group.labels.all %}
+              <div class="accordion" id="labelAccordion{{ group.id }}">
+                {% for label in group.labels.all %}
+                  <div class="accordion-item mb-2">
+                    <h2 class="accordion-header" id="labelHeading{{ label.id }}">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                              data-bs-target="#labelCollapse{{ label.id }}" aria-expanded="false"
+                              aria-controls="labelCollapse{{ label.id }}">
+                        🏷️ {{ label.name }}
+                      </button>
+                    </h2>
+                    <div id="labelCollapse{{ label.id }}" class="accordion-collapse collapse"
+                        aria-labelledby="labelHeading{{ label.id }}" data-bs-parent="#labelAccordion{{ group.id }}">
+                      <div class="accordion-body">
+                        <!-- 💻 Desktop View: Table -->
+                        <div class="table-responsive d-none d-md-block">
+                          <table class="table table-bordered text-center align-middle">
+                            <thead class="table-light">
+                              <tr>
+                                <th>💰 المبلغ المتوقع</th>
+                                <th>الإجراءات</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>{{ label.expected_monthly }}</td>
+                                <td>
+                                  <a href="{% url 'label_edit' label.id %}?next={{ request.path }}" class="btn btn-sm btn-warning">✏️</a>
+                                  <a href="{% url 'label_delete' label.id %}?next={{ request.path }}" class="btn btn-sm btn-danger">🗑️</a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <!-- 📱 Mobile View: Card -->
+                        <div class="d-block d-md-none">
+                          <div class="card border-light mb-2">
+                            <div class="card-body">
+                              <p><strong>💰 المبلغ المتوقع:</strong> {{ label.expected_monthly }}</p>
+                              <div class="d-flex gap-2 justify-content-end">
+                                <a href="{% url 'label_edit' label.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-warning">✏️ تعديل</a>
+                                <a href="{% url 'label_delete' label.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-danger">🗑️ حذف</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p class="text-muted">لا توجد تسميات في هذه المجموعة</p>
+            {% endif %}
+
+            <!-- ➕ Group Controls -->
+            <div class="d-flex justify-content-between mt-3">
+              <a href="{% url 'label_add' %}?group={{ group.id }}&next={{ request.path }}" class="btn btn-sm btn-primary">➕ إضافة تسمية</a>
+              <div class="d-flex gap-2">
+                <a href="{% url 'group_edit' group.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-warning">✏️ تعديل المجموعة</a>
+                <a href="{% url 'group_delete' group.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-danger">🗑️ حذف المجموعة</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+<!-- JS for Expand/Collapse -->
+<script>
+  function expandAll() {
+    document.querySelectorAll('.accordion-collapse').forEach(el => {
+      const collapse = new bootstrap.Collapse(el, { toggle: false });
+      collapse.show();
+    });
+  }
+
+  function collapseAll() {
+    document.querySelectorAll('.accordion-collapse').forEach(el => {
+      const collapse = new bootstrap.Collapse(el, { toggle: false });
+      collapse.hide();
+    });
+  }
+</script>
+
+
+{% endblock %}
+

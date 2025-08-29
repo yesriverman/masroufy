@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<h2>📊 التخطيط المالي</h2>
+
+<p>الدخل الشهري المتوقع: <strong>{{ expected_income }}</strong></p>
+<p>مجموع النفقات السنوية: <strong>{{ annual_total }}</strong></p>
+<p>القسط الشهري للنفقات السنوية: <strong>{{ monthly_equivalent }}</strong></p>
+<p>مجموع المصاريف الشهرية: <strong>{{ total_monthly_expense }}</strong></p>
+
+{% if nett_monthly >= 0 %}
+  <p style="color: green;">✅ الرصيد الشهري إيجابي: {{ nett_monthly }}</p>
+{% else %}
+  <p style="color: red;">⚠️ الرصيد الشهري سلبي: {{ nett_monthly }}</p>
+{% endif %}
+
+<hr>
+{{excepttt }}::!!excepttt
+<h3>📂 تفاصيل التصنيفات</h3>
+
+{% for group in group_data %}
+  <details>
+    <summary><strong>{{ group.group.name }}</strong> — مجموع: {{ group.group_total }}</summary>
+    <ul>
+      {% for label in group.labels %}
+        <li>{{ label.name }} — {{ label.expected_monthly }}</li>
+      {% endfor %}
+    </ul>
+  </details>
+{% endfor %}
+{% endblock %}

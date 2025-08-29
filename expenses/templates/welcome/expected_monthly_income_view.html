@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}📥 الدخل الشهري المتوقع{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-center " >
+                  <h4 class="mb-0">📥 ما هو دخلك الشهري المتوقع؟</h4>
+                </div>
+                <div class="card-body">
+
+
+
+
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit" class="btn btn-success">💾 حفظ</button>
+      </form>
+
+      {% comment %} <form method="POST" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_income" class="form-label">💰 الدخل الشهري (د.م)</label>
+          <input type="number" name="income" id="id_income" step="1" required class="form-control" placeholder="أدخل المبلغ هنا">
+        </div>
+        <button type="submit" class="btn btn-primary ">التالي ⏭️</button>
+      </form> {% endcomment %}
+      
+    </div>
+  </div>
+</div>
+
+{% endblock %}

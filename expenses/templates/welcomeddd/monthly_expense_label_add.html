@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<h2>إضافة تصنيف جديد للمصاريف الشهرية</h2>
+<form method="POST">
+  {% csrf_token %}
+  <input type="text" name="name" placeholder="اسم التصنيف" required>
+  <input type="number" name="expected_monthly" step="1" placeholder="المبلغ المتوقع شهرياً" required>
+  <button type="submit">➕ إضافة</button>
+</form>
+
+<a href="{% url 'monthly_expenses_editor' %}">⬅️ العودة إلى المصاريف الشهرية</a>
+
+
+{% endblock %}

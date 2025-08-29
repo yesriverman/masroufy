@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<h2>المصاريف الشهرية</h2>
+<form method="POST">
+  {% csrf_token %}
+  {% for label in labels %}
+    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+      <input type="text" name="name_{{ label.id }}" value="{{ label.name }}" required>
+      <input type="number" name="expected_{{ label.id }}" value="{{ label.expected_monthly }}" step="1" required>
+      <button type="submit" name="delete_{{ label.id }}" value="true">🗑️ حذف</button>
+    </div>
+  {% endfor %}
+  <button type="submit">💾 حفظ التعديلات</button>
+</form>
+
+<hr>
+<a href="{% url 'monthly_expense_label_add' %}" class="btn btn-success">➕ إضافة تصنيف جديد</a>
+
+
+{% endblock %}

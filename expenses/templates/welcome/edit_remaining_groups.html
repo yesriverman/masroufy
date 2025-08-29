@@ -1,0 +1,106 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}📊 النفقات السنوية{% endblock %}
+{% block content %}
+
+<div class="container mt-1">
+<form method="post">
+  {% csrf_token %}
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-2">
+        <div class="card-header text-center " >
+          <h4 class="mb-0"> 🔧 تعديل المصاريف الشهرية المتغيرة + المواد الغذائية + الطوارئ</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      {% for group in groups %}
+        <div class="card shadow-sm mb-1">
+          <div class="card-header text-center " >
+            <h4 class="mb-0"> {{ group.name }}</h4>
+          </div>
+          <div class="card-body">
+            {% for g, label, form in label_forms %}
+            {% if g.id == group.id %}
+              <div class="mb-1 d-flex align-items-center justify-content-between">
+                <label class="form-label fw-bold me-1" >
+                  {{ label.name }}
+                </label>
+                <div class="flex-grow-1 me-1">
+                  {{ form.expected_monthly }}
+                </div>
+                </div>
+                <div class="mb-1 d-flex align-items-center justify-content-between">
+
+                  <a href="{% url 'label_edit' label.id %}?next={{ request.path }}" class="btn btn-sm btn-warning me-1">تعديل</a>
+                  <a href="{% url 'label_delete' label.id %}?next={{ request.path }}" class="btn btn-sm btn-danger me-1">حذف</a>
+                </div>
+              <hr>
+              {% endif %}
+              
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+    
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm ">
+        <div class="card-body">
+          <div class=" d-flex align-items-center justify-content-between">
+              <button type="submit" class="btn btn-sm btn-success me-1">💾 حفظ التعديلات</button>
+            </form>
+
+              <a href="{% url 'label_add' %}?next={{ request.path }}" class="btn btn-sm btn-primary me-1">
+  ➕ إضافة تسمية
+</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+          
+      
+
+
+
+
+{% comment %} 
+
+
+<h4 class="mb-4">🔧 تعديل المصاريف الشهرية المتغيرة + المواد الغذائية + الطوارئ</h4>
+
+<form method="post">
+  {% csrf_token %}
+
+  {% for group in groups %}
+    <div class="mb-4">
+      <h5 class="text-primary">{{ group.name }}</h5>
+      <hr>
+      {% for g, label, form in label_forms %}
+        {% if g.id == group.id %}
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ label.name }}</label>
+            {{ form.expected_monthly }}
+          {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+  <button type="submit" class="btn btn-success">💾 حفظ التعديلات</button>
+</form> {% endcomment %}
+
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<form method="POST">
+  {% csrf_token %}
+  <h2>النفقات السنوية</h2>
+
+  {% for label in labels %}
+    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+      <input type="text" name="name_{{ label.id }}" value="{{ label.name }}" placeholder="اسم التصنيف" required>
+      <input type="number" name="expected_{{ label.id }}" value="{{ label.expected_monthly }}" step="1" placeholder="المبلغ المتوقع شهرياً" required>
+    
+        <button type="submit" name="delete_{{ label.id }}" value="true">🗑️ حذف</button>
+    </div>
+  {% endfor %}
+<button type="submit">➕ إضافة</button>
+  <hr>
+  <hr>
+<a href="{% url 'annual_expense_label_add' %}" class="btn btn-success">➕ إضافة تصنيف جديد</a>
+
+  {% comment %} <h3>إضافة تصنيف جديد</h3>
+  <input type="text" name="new_label_name" placeholder="اسم التصنيف الجديد" required>
+  <input type="number" name="new_label_expected" step="0.01" placeholder="المبلغ المتوقع شهرياً" required>
+   {% endcomment %}
+</form>
+{% endblock %}

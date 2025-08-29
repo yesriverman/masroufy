@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}📊 النفقات السنوية{% endblock %}
+{% block content %}
+
+<div class="container mt-1">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-center " >
+                  <h4 class="mb-0"> ما هي مصاريفك السنوية؟</h4>
+                </div>
+                <div class="card-body ">
+
+                  <form method="post">
+                    {% csrf_token %}
+
+                      {% for label, form in label_forms %}
+                        <div class="mb-1  d-flex align-items-center justify-content-between">
+                          <label class="form-label fw-bold me-3" >{{ label.name }}
+                          </label>
+                          <div class="flex-grow-1 me-3">
+                            {{ form.expected_monthly }}
+                          </div>
+                        </div>
+                        
+                          <div class="mb-1 d-flex align-items-center justify-content-between">
+                            <a href="{% url 'label_edit' label.id %}?next={{ request.path }}" class="btn btn-sm btn-warning me-1">تعديل</a>
+                            <a href="{% url 'label_delete' label.id %}?next={{ request.path }}" class="btn btn-sm btn-danger">حذف</a>
+                          </div>
+                        <hr>
+                      {% endfor %}
+<div class="mb-1 d-flex align-items-center justify-content-between">
+                    <button type="submit" class="btn btn-sm btn-success me-1">💾 حفظ التعديلات</button>
+                  </form>
+
+  <a href="{% url 'add_annual_label_view' %}" class="btn btn-sm btn-primary me-1">↩️ اضافة مصروف سنوي</a>
+
+{% endblock %}

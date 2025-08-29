@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}➕ إضافة مصروف متعدد{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-white text-center " >
+      <h4 class="mb-0">{% if form.instance.pk %}✏️ تعديل المصروف{% else %}➕ إضافة مصروف{% endif %}</h4>
+                </div>
+    <div class="card-body">
+
+  <h4 class="mb-4">اختر المجموعة لعرض التصنيفات</h4>
+
+  <!-- Group Selector -->
+<form method="get" class="mb-4">
+  <input type="hidden" name="next" value="{{ next }}">
+  <select name="group" class="form-select">
+    <option value="">-- اختر المجموعة --</option>
+    {% for group in groups %}
+      <option value="{{ group.id }}" {% if group.id|stringformat:"s" == selected_group_id %}selected{% endif %}>{{ group.name }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn btn-primary mt-2">تحميل التصنيفات</button>
+</form>
+
+
+  {% comment %} <form method="get" class="mb-4">
+    <select name="group" class="form-select">
+      <option value="">-- اختر المجموعة --</option>
+      {% for group in groups %}
+        <option value="{{ group.id }}" {% if group.id|stringformat:"s" == selected_group_id %}selected{% endif %}>{{ group.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary mt-2">تحميل التصنيفات</button>
+  </form> {% endcomment %}
+
+  {% if formset.forms %}
+  <form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+
+{% for form in formset %}
+
+  <div class="mb-2 d-flex flex-column flex-md-row align-items-md-center gap-2">
+    
+    <!-- 🏷️ Label -->
+    <label for="{{ form.amount.id_for_label }}" class="form-label mb-1 mb-md-0" style="min-width: 120px;">
+      {{ form.label_name }}{{ form.label_id }}
+    </label>
+
+    <!-- 💵 Input Field -->
+    <div class="flex-grow-1">
+      {{ form.amount }}
+      {% for error in form.amount.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+  </div>
+  <hr>
+{% endfor %}
+
+      {% if next %}
+    <input type="hidden" name="next" value="{{ next }}">
+  {% endif %}
+    <button type="submit" class="btn btn-success">💾 حفظ المصروفات</button>
+  </form>
+  {% endif %}
+</div>
+
+{% endblock %}

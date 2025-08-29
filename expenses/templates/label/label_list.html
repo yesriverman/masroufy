@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}📂 التسميات الفرعية الشهرية المتغيرة{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="accordion" id="groupAccordion">
+    {% for group in groups %}
+      <div class="accordion-item mb-3">
+        <h2 class="accordion-header" id="heading{{ group.id }}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapse{{ group.id }}" aria-expanded="false" aria-controls="collapse{{ group.id }}">
+            🗂️ {{ group.name }}
+          </button>
+        </h2>
+
+        <div id="collapse{{ group.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ group.id }}"
+             data-bs-parent="#groupAccordion">
+          <div class="accordion-body">
+
+            {% with group.labels.all|dictsort:"order" as labels %}
+              {% if labels %}
+                <div class="accordion" id="labelAccordion{{ group.id }}">
+                  {% for sub in labels %}
+                    <div class="accordion-item mb-2">
+                      <h2 class="accordion-header" id="labelHeading{{ sub.id }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#labelCollapse{{ sub.id }}" aria-expanded="false"
+                                aria-controls="labelCollapse{{ sub.id }}">
+                          🏷️ {{ sub.name }} — 💰 {{ sub.expected_monthly|floatformat:2 }} د.م
+                        </button>
+                      </h2>
+                      <div id="labelCollapse{{ sub.id }}" class="accordion-collapse collapse"
+                           aria-labelledby="labelHeading{{ sub.id }}" data-bs-parent="#labelAccordion{{ group.id }}">
+                        <div class="accordion-body d-flex flex-wrap justify-content-end gap-2">
+                          <a href="{% url 'label_edit' sub.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-warning">✏️ تعديل</a>
+                          <a href="{% url 'label_delete' sub.id %}?next={{ request.path }}" class="btn btn-sm btn-outline-danger">🗑️ حذف</a>
+                          <a href="{% url 'move_label_up' sub.pk %}?next={{ request.path }}" class="btn btn-sm btn-outline-secondary">⬆️</a>
+                          <a href="{% url 'move_label_down' sub.pk %}?next={{ request.path }}" class="btn btn-sm btn-outline-secondary">⬇️</a>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <p class="text-muted">لا توجد تسميات فرعية ضمن هذه المجموعة.</p>
+              {% endif %}
+            {% endwith %}
+
+            <div class="d-flex justify-content-between mt-3">
+              <a href="{% url 'label_add' %}?group={{ group.id }}&next={{ request.path }}" class="btn btn-sm btn-primary">➕ إضافة تسمية</a>
+              <div class="d-flex gap-2">
+                <a href="{% url 'group_edit' group.id %}?next={{ request.path }}" class="btn btn-sm btn-warning">✏️ تعديل المجموعة</a>
+                <a href="{% url 'group_delete' group.id %}?next={{ request.path }}" class="btn btn-sm btn-danger">🗑️ حذف المجموعة</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="d-flex justify-content-between mt-4 flex-wrap">
+    <a href="{% url 'group_add' %}?next={{ request.path }}" class="btn btn-success">➕ إضافة مجموعة</a>
+    <a href="{% url 'label_add' %}?next={{ request.path }}" class="btn btn-primary">➕ إضافة تسمية عامة</a>
+  </div>
+</div>
+
+{% endblock %}
+
+

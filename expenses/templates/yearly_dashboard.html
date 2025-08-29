@@ -1,0 +1,556 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header text-white " >
+      <div class="row align-items-center">
+        <div class="col-md-9 ">
+          <h3 class="mb-0">📊 ملخص السنة المالية {{ year }}</h3>
+        </div>
+        <div class="col-md-3 text-end">
+
+          <form method="get" class="d-flex flex-wrap gap-2 align-items-center">
+            <div class="flex-grow-1">
+              <select name="year" class="form-select form-select-sm tom-select" style="font-size: 0.85rem;">
+                {% for y in year_range %}
+                  <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">🔄 تحديث</button>
+          </form>
+{% comment %} 
+<div class="card mb-4">
+  <div class="card-header text-center fw-bold">📊 توزيع المصروفات حسب التصنيف</div>
+  <div class="card-body">
+    <canvas id="donutChart" height="300"></canvas>
+
+    <script>
+    const donutCtx = document.getElementById('donutChart').getContext('2d');
+    new Chart(donutCtx, {
+      type: 'doughnut',
+      data: {
+        labels: {{ donut_labels|safe }},
+        datasets: [{
+          data: {{ donut_values|safe }},
+          backgroundColor: [
+            '#f44336', '#2196f3', '#4caf50', '#ff9800', '#9c27b0',
+            '#00bcd4', '#8bc34a', '#e91e63', '#3f51b5', '#ff5722'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              font: { size: 12 }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `${context.label}: ${context.parsed} د.م`;
+              }
+            }
+          }
+        }
+      }
+    });
+    </script>
+
+
+<canvas id="pieChart"></canvas>
+<script>
+const pieCtx = document.getElementById('pieChart').getContext('2d');
+new Chart(pieCtx, {
+  type: 'pie',
+  data: {
+    labels: {{ pie_labels|safe }},
+    datasets: [{
+      data: {{ pie_values|safe }},
+      backgroundColor: ['#f44336', '#2196f3', '#4caf50', '#ff9800', '#9c27b0']
+    }]
+  }
+});
+</script>
+
+<canvas id="lineChart"></canvas>
+<script>
+const lineCtx = document.getElementById('lineChart').getContext('2d');
+new Chart(lineCtx, {
+  type: 'line',
+  data: {
+    labels: {{ line_months|safe }},
+    datasets: [
+      {
+        label: 'الدخل',
+        data: {{ line_income|safe }},
+        borderColor: '#4caf50',
+        fill: false
+      },
+      {
+        label: 'المصاريف',
+        data: {{ line_expense|safe }},
+        borderColor: '#f44336',
+        fill: false
+      }
+    ]
+  }
+});
+</script>
+
+<canvas id="barChart"></canvas>
+<script>
+const barCtx = document.getElementById('barChart').getContext('2d');
+new Chart(barCtx, {
+  type: 'bar',
+  data: {
+    labels: {{ bar_labels|safe }},
+    datasets: [
+      {
+        label: 'الفعلي',
+        data: {{ bar_actual|safe }},
+        backgroundColor: '#2196f3'
+      },
+      {
+        label: 'المتوقع',
+        data: {{ bar_expected|safe }},
+        backgroundColor: '#9c27b0'
+      }
+    ]
+  }
+});
+</script>
+
+<canvas id="heatmapChart"></canvas>
+<script>
+const heatmapCtx = document.getElementById('heatmapChart').getContext('2d');
+new Chart(heatmapCtx, {
+  type: 'bar',
+  data: {
+    labels: {{ heatmap_months|safe }},
+    datasets: [{
+      label: 'شدة الإنفاق',
+      data: {{ heatmap_intensity|safe }},
+      backgroundColor: '#ff9800'
+    }]
+  }
+});
+</script>
+ {% endcomment %}
+
+
+  </div>
+</div>
+  </div>
+</div>
+
+
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3 mt-3">
+  {% comment %} <!-- Donut Chart Card -->
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header text-center fw-bold">🍩 توزيع المصروفات</div>
+      <div class="card-body">
+        <canvas id="donutChart" height="250"></canvas>
+        <script>
+        const donutCtx = document.getElementById('donutChart').getContext('2d');
+        new Chart(donutCtx, {
+          type: 'doughnut',
+          data: {
+            labels: {{ donut_labels|safe }},
+            datasets: [{
+              data: {{ donut_values|safe }},
+              backgroundColor: [
+                '#f44336', '#2196f3', '#4caf50', '#ff9800', '#9c27b0',
+                '#00bcd4', '#8bc34a', '#e91e63', '#3f51b5', '#ff5722'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  font: { size: 12 }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.label}: ${context.parsed} د.م`;
+                  }
+                }
+              }
+            }
+          }
+        });
+        </script>
+      </div>
+    </div>
+  </div> {% endcomment %}
+
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header text-center fw-bold">🍩 توزيع المصروفات حسب المجموعة</div>
+      <div class="card-body">
+        <canvas id="groupDonutChart" height="250"></canvas>
+        <script>
+        const groupDonutCtx = document.getElementById('groupDonutChart').getContext('2d');
+        new Chart(groupDonutCtx, {
+          type: 'doughnut',
+          data: {
+            labels: {{ group_labels|safe }},
+            datasets: [{
+              data: {{ group_values|safe }},
+              backgroundColor: [
+                '#4caf50', '#f44336', '#2196f3', '#ff9800', '#9c27b0',
+                '#00bcd4', '#8bc34a', '#e91e63', '#3f51b5', '#ff5722'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  font: { size: 12 }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.label}: ${context.parsed} د.م`;
+                  }
+                }
+              }
+            }
+          }
+        });
+        </script>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Pie Chart Card -->
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header text-center fw-bold">🥧 أهم التصنيفات إنفاقاً</div>
+      <div class="card-body">
+        <canvas id="pieChart" height="250"></canvas>
+        <script>
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
+          type: 'pie',
+          data: {
+            labels: {{ pie_labels|safe }},
+            datasets: [{
+              data: {{ pie_values|safe }},
+              backgroundColor: ['#f44336', '#2196f3', '#4caf50', '#ff9800', '#9c27b0']
+            }]
+          }
+        });
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <!-- Line Chart Card -->
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header text-center fw-bold">📈 الدخل مقابل المصاريف شهرياً</div>
+      <div class="card-body">
+        <canvas id="lineChart" height="250"></canvas>
+        <script>
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        new Chart(lineCtx, {
+          type: 'line',
+          data: {
+            labels: {{ line_months|safe }},
+            datasets: [
+              {
+                label: 'الدخل',
+                data: {{ line_income|safe }},
+                borderColor: '#4caf50',
+                fill: false
+              },
+              {
+                label: 'المصاريف',
+                data: {{ line_expense|safe }},
+                borderColor: '#f44336',
+                fill: false
+              }
+            ]
+          }
+        });
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bar Chart Card -->
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header text-center fw-bold">📊 الإنفاق حسب التصنيف</div>
+      <div class="card-body">
+        <canvas id="barChart" height="250"></canvas>
+        <script>
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+          type: 'bar',
+          data: {
+            labels: {{ bar_labels|safe }},
+            datasets: [
+              {
+                label: 'الفعلي',
+                data: {{ bar_actual|safe }},
+                backgroundColor: '#2196f3'
+              },
+              {
+                label: 'المتوقع',
+                data: {{ bar_expected|safe }},
+                backgroundColor: '#9c27b0'
+              }
+            ]
+          }
+        });
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <!-- Heatmap Chart Card -->
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header text-center fw-bold">🔥 شدة الإنفاق حسب الشهر</div>
+      <div class="card-body">
+        <canvas id="heatmapChart" height="250"></canvas>
+          <script>
+          const heatmapCtx = document.getElementById('heatmapChart').getContext('2d');
+          new Chart(heatmapCtx, {
+            type: 'bar',
+            data: {
+              labels: {{ heatmap_months|safe }},
+              datasets: [{
+                label: 'شدة الإنفاق',
+                data: {{ heatmap_intensity|safe }},
+                backgroundColor: '#ff9800'
+              }]
+            }
+          });
+          </script>
+      </div>
+    </div>
+  </div>
+
+<div class="col">
+  <div class="card h-100 shadow-sm">
+    <div class="card-header text-center fw-bold">💰 الادخار الشهري (من التصنيف)</div>
+    <div class="card-body">
+      <canvas id="savingsChart" height="250"></canvas>
+      <script>
+      const savingsCtx = document.getElementById('savingsChart').getContext('2d');
+      new Chart(savingsCtx, {
+        type: 'line',
+        data: {
+          labels: {{ savings_labels|safe }},
+          datasets: [{
+            label: 'الادخار',
+            data: {{ savings_values|safe }},
+            borderColor: '#4caf50',
+            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `ادخار: ${context.parsed} د.م`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return value + ' د.م';
+                }
+              }
+            }
+          }
+        }
+      });
+      </script>
+
+    </div>
+  </div>
+</div>
+
+
+</div>
+
+
+<!-- 📅 Monthly Summary Accordion -->
+<div class="accordion mb-4 mt-4" id="monthlySummaryAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="monthlySummaryHeading">
+      <button class="accordion-button collapsed fw-bold bg-light" type="button"
+              data-bs-toggle="collapse" data-bs-target="#monthlySummaryCollapse"
+              aria-expanded="false" aria-controls="monthlySummaryCollapse">
+        📅 تفصيل شهري
+      </button>
+    </h2>
+    <div id="monthlySummaryCollapse" class="accordion-collapse collapse"
+         aria-labelledby="monthlySummaryHeading" data-bs-parent="#monthlySummaryAccordion">
+      <div class="accordion-body p-0">
+        <div class="table-responsive" dir="rtl">
+          <table class="table table-bordered text-center align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>الشهر</th>
+                <th>الدخل</th>
+                <th>الثابتة</th>
+                <th>المتغيرة</th>
+                <th>القسط السنوي</th>
+                <th>الرصيد</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for month in monthly_data %}
+              <tr>
+                <td>{{ month.name }}</td>
+                <td>{{ month.income }}</td>
+                <td>{{ month.fixed }}</td>
+                <td>{{ month.variable }}</td>
+                <td>{{ month.installment }}</td>
+                <td class="{% if month.balance < 0 %}text-danger{% else %}text-success{% endif %}">
+                  {{ month.balance }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- 🏷️ Category Comparison Accordion -->
+<div class="accordion mb-4" id="categoryComparisonAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="categoryComparisonHeading">
+      <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#categoryComparisonCollapse" aria-expanded="false" aria-controls="categoryComparisonCollapse">
+        🏷️ مقارنة الميزانية حسب التصنيفات
+      </button>
+    </h2>
+    <div id="categoryComparisonCollapse" class="accordion-collapse collapse" aria-labelledby="categoryComparisonHeading" data-bs-parent="#categoryComparisonAccordion">
+      <div class="accordion-body p-0">
+        <div class="table-responsive" dir="rtl">
+          <table class="table mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>التسمية</th>
+                <th>المتوقع السنوي</th>
+                <th>الفعلي</th>
+                <th>الفرق</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for label, totals in category_totals.items %}
+              <tr>
+                <td>{{ label }}</td>
+                <td>{{ totals.expected }}</td>
+                <td>{{ totals.actual }}</td>
+                <td class="{% if totals.diff > 0 %}text-danger{% else %}text-success{% endif %}">
+                  {{ totals.diff|floatformat:0 }}
+                </td>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- 🔹 Smart Insights -->
+  {% if insights %}
+  <div class="mb-4">
+    <h5>🧠 ملاحظات ذكية</h5>
+    {% for insight in insights %}
+      <div class="alert alert-info">{{ insight }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- 🔹 Budget Simulator (Optional) -->
+
+
+</div>
+{% endblock %}
+
+
+
+{% comment %} 
+
+- Total Income vs. Total Expenses
+- full-year totals side by side with balance and percentage spent
+- Monthly Average	Display average monthly income and expenses, with trend arrows (📈📉).
+- Savings Rate	Calculate savings as a percentage of income
+- - Top Spending Categories	Pie chart
+- ranked list of labels with highest totals.
+- Budget vs. Actual	Compare expected_monthly × 12 vs. actual totals per label. Highlight overspending.
+- Monthly Breakdown Grid
+- A 12-column layout showing each month’s:Income, Fixed expenses, Variable expenses, Annual installment, Net balance     
+- make this collapsible or scrollable, with color-coded cells (green for surplus, red for deficit).
+
+    🧠 Smart Insights Section
+- Let the dashboard feel intelligent:
+      “You spent 22% more on groceries than planned.”
+      “Your lowest spending month was February.”
+      “You saved 18,000 د.م more than last year.”
+      These can be generated from your data model and shown as cards or alerts.
+
+      📈 Visuals That Matter
+- - Line chart: Monthly income vs. expenses
+- - Bar chart: Category-wise spending
+- - Donut chart: Expense distribution
+- - Heatmap: Spending intensity by month
+      Use Chart.js or Plotly for interactive visuals.
+      🧮 Budget Planner Panel
+- Let users simulate changes:
+      “If I increase rent by 500 د.م, how does my yearly balance change?”
+      “What if I cut entertainment by 30%?”
+      This could be a form with sliders and instant recalculations.
+      🧭 Navigation & UX Suggestions
+- Replace accordion-heavy layout with cards and tabs
+- Add summary badges at the top (e.g. 💰 Total Saved: 24,000 د.م)
+- Summary Cards (Income, Expenses, Balance)
+- Charts (Income vs. Expenses, Category Split)
+- Monthly Breakdown Table (Jan–Dec) 
+- Smart Insights (overspending, savings rate)
+- Budget Simulator (sliders + recalculations)
+
+
+{% endcomment %}
+

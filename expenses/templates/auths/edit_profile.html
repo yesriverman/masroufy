@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}تعديل الملف الشخصي{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-center " >
+                    <h4 class="mb-0">✏️ تعديل الملف الشخصي</h4>
+                </div>
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+
+        {% for field in form %}
+          {% if field.name != 'has_wife' %}
+            <div class="mb-3 d-flex align-items-center">
+              <label for="{{ field.id_for_label }}" class="form-label me-3 text-start" style="min-width: 120px;">
+                {{ field.label }}
+              </label>
+              <div class="flex-grow-1 text-end">
+                {{ field }}
+                <div class="text-danger small">{{ field.errors }}</div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+  
+        <label class="form-check-label ms-2" for="{{ form.has_wife.id_for_label }}">
+          {{ form.has_wife.label }}
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{ form.has_wife }}
+        <div class="text-danger small ms-3">{{ form.has_wife.errors }}</div>
+
+        <div class="d-flex justify-content-between mt-4">
+          <button type="submit" class="btn btn-primary">💾 حفظ التغييرات</button>
+          <a href="{% url 'profile' %}" class="btn btn-secondary">↩️ إلغاء</a>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

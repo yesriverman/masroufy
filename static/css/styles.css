@@ -1,0 +1,199 @@
+:root {
+  /* Brand colors */
+  --bs-primary: #0d6efd;   
+  --bs-success: #198754;   
+  --bs-danger: #dc3545;
+  --bs-warning: #ffc107;  
+  --bs-info: #0dcaf0;
+  --bs-light: #f8f9fa;
+  --bs-dark: #030E18FF; 
+  --bs-secondary: #6B7280;    
+  --bs-cardheader: #3B82F6; 
+  --bs-darknavy:#192E5AFF;
+  /* Background */
+  --app-bg: #33464EFF; 
+}
+  /* bootstrap 
+:root {
+  --bs-primary: #0d6efd;
+  --bs-success: #198754;
+  --bs-danger: #dc3545;
+  --bs-warning: #ffc107;
+  --bs-info: #0dcaf0;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
+  --bs-secondary: #6c757d;
+}
+*/
+
+html {
+    font-weight: bold;
+    font-size: 20px; /* Default is usually 16px — bump it up here */
+}
+/* Global background */
+body {
+    direction: rtl;
+    text-align: right;
+    font-weight: bold;
+    /* padding-top: 5px; Space for fixed navbar Tajawal*/
+    background-color: var(--app-bg);/* Table headers  #D0DAE6;*/
+    font-family: 'Tajawal', sans-serif;
+    /*font-family: 'Cairo', sans-serif;  Optional: Arabic-friendly font
+    Noto Kufi Arabic	Clean and geometric — ideal for headers and structured layouts
+Playpen Sans Arabic
+ */
+}
+
+/* Table headers */
+.table thead {
+  background-color: var(--bs-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Google Fonts like Cairo, Amiri, or Noto Kufi Arabic. */
+h2 {
+    color: #D32189;
+}
+h1 {
+    color: var(--bs-warning);
+}
+.table th {
+    background-color: var(--bs-success);
+    color: white;
+    font-weight: bold;
+
+}
+.accordion-button {
+  background-color: var(--bs-accordion); /* or use a happy mix like #a8dadc */
+  color: var(--white);
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  transition: background-color 0.3s ease;
+}
+.accordion-button.collapsed {
+  background-color: var(--bs-light); 
+  color: #000000;
+  font-weight: bold;
+}
+.accordion-button:not(.collapsed) {
+  background-color: var(--bs-warning); 
+  color: #fff;
+  font-weight: bold;
+}
+
+
+input, select, textarea, label {
+    font-weight: bold;
+}
+
+.card h2, .card h5 {
+    font-weight: bold;
+}
+
+.big-card-header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #0d6efd;
+}
+
+.label-item {
+    font-weight: bold;
+    font-size: 18px;
+    font-weight: 500;
+    color: #212529;
+}
+
+/* Cards */
+.card {
+  /* border-radius: 1rem; */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  background-color: #fff;
+}
+.card-header {
+  background-color: var(--bs-cardheader);
+  color: #fff;
+  font-weight: 600;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  /* border-radius: 1.5rem; Adjust as needed */
+}
+
+.badge-annual {
+  background-color: #f39c12; /* warm orange */
+  color: white;
+  font-size: 0.85rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  margin-left: 0.5rem;
+}
+
+.compact-card-body {
+  padding: 0.5rem 1rem;
+  line-height: 0.3;
+}
+.card-body h4 {
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+
+.flatpickr-calendar {
+  z-index: 9999 !important;
+}
+/* Apply only on small screens */
+/* @media (max-width: 576px) {
+  select.form-select {
+    font-size: 0.85rem;   shrink text */
+    /* padding: 0.25rem 0.5rem;  reduce height */
+  /* }
+} */
+
+/* Mobile-only: turn table rows into collapsible cards */
+@media (max-width: 576px) {
+  .card-table thead {
+    display: none;
+  }
+  .card-table, 
+  .card-table tbody, 
+  .card-table tr, 
+  .card-table td {
+    display: block;
+    width: 100%;
+  }
+  .card-table tr {
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  .card-table td {
+    padding: 0;
+    border: none;
+  }
+  /* Header button */
+  .card-header-btn {
+    width: 100%;
+    text-align: left;
+    background: #0d6efd;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    font-weight: bold;
+  }
+  .card-header-btn:focus {
+    outline: none;
+  }
+  /* Collapsible body */
+  .card-collapse {
+    padding: 10px 14px;
+    border-top: 1px solid #eee;
+    background: #f9f9f9;
+  }
+  .card-collapse p {
+    margin: 4px 0;
+  }
+}
